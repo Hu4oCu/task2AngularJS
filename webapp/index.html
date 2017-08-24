@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="messageApp">
+<head>
+	<title>AngularJS</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<meta charset="UTF-8">
+	<script src="node_modules/angular/angular.js"></script>
+</head>
+<body ng-controller="messageCtrl">
+    <modal></modal>
+	<div class="container-flexible m-4">
+		<div class="navbar bg-dark">
+			<nav class="navbar-nav nav-link">
+				<button class="btn btn-primary btn-sm" type="button" ng-click="openAddMessageModal()">
+					Add Message
+				</button>
+			</nav>
+		</div>
+        <nav class="mt-3" ng-show="paginationList">
+            <ul class="pagination pagination-sm">
+                <li class="page-item" ng-click="previousPage()" ng-class="{'disabled': currentPage() === 0}" style="cursor: pointer"><a class="page-link">Previous</a></li>
+                <li class="page-item" ng-repeat="page in paginationList"
+                    ng-click="showPage(page.link)"
+                    ng-class="{'active': currentPage() === page.link}" style="cursor: pointer"><a class="page-link">{{page.name}}</a></li>
+                <li class="page-item" ng-click="nextPage()" ng-class="{'disabled': currentPage() === totalPagesNum()}" style="cursor: pointer"><a class="page-link">Next</a></li>
+            </ul>
+        </nav>
+		<table class="table table-hover table-sm" border="1">
+			<thead class="thead-inverse">
+				<tr class="col">
+					<th>ID</th>
+					<th class="col-4">MessageRU</th>
+					<th class="col-4">MessageKZ</th>
+					<th class="col-4">MessageEN</th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="message in messages">
+					<th scope="row">{{message.id}}</th>
+					<td class="col-3">{{message.ru}}</td>
+					<td class="col-3">{{message.kz}}</td>
+					<td class="col-3">{{message.en}}</td>
+					<td class="align-middle">
+                        <button type="button" class="btn btn-dark btn-sm" ng-click="openUpdateMessageModal(message, $index)">
+                            <i class="fa fa-pencil pr-1 pl-1" aria-hidden="true"></i>
+                        </button>
+					</td>
+					<td class="align-middle">
+                        <button type="button" class="btn btn-dark btn-sm" ng-click="deleteMessage(message, $index)">
+                            <i class="fa fa-times pr-1 pl-1" aria-hidden="true"></i>
+                        </button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<!--<pagination></pagination>-->
+	</div>
+	<script src="app/MessageController.js"></script>
+	<script src="app/MessageService.js"></script>
+    <script src="app/MessagePagination.js"></script>
+	<script src="app/MessageDirectives.js"></script>
+</body>
+</html>
