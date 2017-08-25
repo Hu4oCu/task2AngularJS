@@ -2,7 +2,7 @@ var messageApp = angular.module('messageApp');
 
 messageApp.factory('pagination', [function () {
     var currentPage = 0,
-        itemsPerPage = 10,
+        itemsPerPage = 15,
         messages = [];
 
     return {
@@ -54,7 +54,7 @@ messageApp.factory('pagination', [function () {
 
         getPaginationList: function (page) {
             var dynamicPaginationList = [],
-                maxPaginationList = 6,
+                maxPaginationList = 8,
                 delta = Math.floor(maxPaginationList / 2),
                 curPage = angular.isUndefined(page) ? 0 : page,
                 start = curPage - delta,

@@ -3,6 +3,9 @@ var messageApp = angular.module('messageApp', []);
 messageApp.controller('messageCtrl', ['$scope', '$http','messageService', 'pagination',
     function ($scope, $http, messageService, pagination) {
 
+
+        $scope.paginationList = [{name: 1, link: 0}];
+
         $scope.messages = $http.get("/rest/messages")
             .then(function (response) {
                 pagination.setMessages(response.data);
@@ -49,12 +52,15 @@ messageApp.controller('messageCtrl', ['$scope', '$http','messageService', 'pagin
         };
 
         $scope.deleteMessage = function(message, $index) {
+            var curPage = $scope.currentPage();
+
             $scope.messages.splice($index, 1);
             messageService.deleteMessage(message);
             pagination.deleteMessage(message);
-            if ($scope.currentPage() > $scope.totalPagesNum()) {
-                $scope.paginationList = pagination.getDynamicPaginationList();
-                $scope.messages = pagination.getCurrentPageMessages();
+
+            if (curPage > $scope.totalPagesNum()) {
+                $scope.paginationList = pagination.getPaginationList(curPage - 1);
+                $scope.messages = pagination.getCurrentPageMessages(curPage - 1);
             }
         };
 
@@ -79,12 +85,13 @@ messageApp.controller('messageCtrl', ['$scope', '$http','messageService', 'pagin
 
                 messageService.addMessage(message).then(function success(response) {
                     message.id = response;
-
                     pagination.addMessage(message);
 
+                    var curPage = $scope.currentPage();
+
                     if ($scope.paginationList.length < $scope.totalPagesNum()) {
-                        $scope.paginationList = pagination.getDynamicPaginationList();
-                        $scope.messages = pagination.getCurrentPageMessages();
+                        $scope.paginationList = pagination.getPaginationList(curPage + 1);
+                        $scope.messages = pagination.getCurrentPageMessages(curPage + 1);
                     }
                 });
 
