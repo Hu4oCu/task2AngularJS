@@ -52,38 +52,30 @@ messageApp.factory('pagination', [function () {
             return messages.slice(first, last);
         },
 
-        getPaginationList: function () {
-            var pagesNum = this.getTotalPagesNum(),
-                paginationList = [];
+        getPaginationList: function (page) {
+            var dynamicPaginationList = [],
+                maxPaginationList = 6,
+                delta = Math.floor(maxPaginationList / 2),
+                curPage = angular.isUndefined(page) ? 0 : page,
+                start = curPage - delta,
+                end = start + maxPaginationList,
+                totalPagesNum = this.getTotalPagesNum() - 1;
 
-            for (var i = 0; i <pagesNum; i++) {
+
+            if (start < 0) {
+                start = 0;
+                end = maxPaginationList;
+            } else if (end > totalPagesNum) {
+                end = totalPagesNum;
+                start = end - maxPaginationList;
+            }
+
+            for (var i = start; i <= end; i++) {
                 var name = i + 1;
-                paginationList.push({
+                dynamicPaginationList.push({
                     name: name,
                     link: i
                 });
-            }
-            return paginationList;
-        },
-
-        getDynamicPaginationList: function (page) {
-            var dynamicPaginationList = [],
-                maxPaginationList = 6,
-                paginationList = this.getPaginationList(),
-                curPage = angular.isUndefined(page) ? 0 : page,
-                start = curPage - maxPaginationList,
-                end = curPage + maxPaginationList,
-                totalPagesNum = this.getTotalPagesNum() - 1;
-
-            if (curPage < maxPaginationList) {
-                dynamicPaginationList = paginationList
-                    .slice(0, 12);
-            } else if (curPage >= maxPaginationList && curPage < totalPagesNum) {
-                dynamicPaginationList = paginationList
-                    .slice(start, end);
-            } else if (curPage > totalPagesNum - 5) {
-                dynamicPaginationList = paginationList
-                    .slice(start);
             }
 
             return dynamicPaginationList;

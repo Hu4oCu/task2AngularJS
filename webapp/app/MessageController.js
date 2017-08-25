@@ -8,16 +8,20 @@ messageApp.controller('messageCtrl', ['$scope', '$http','messageService', 'pagin
                 pagination.setMessages(response.data);
 
                 $scope.messages = pagination.getCurrentPageMessages();
-                $scope.paginationList = pagination.getDynamicPaginationList();
+                $scope.paginationList = pagination.getPaginationList();
             });
 
         $scope.currentPage = function () {
             return pagination.getCurrentPageNum();
         };
 
+        $scope.totalPagesNum = function () {
+            return pagination.getTotalPagesNum() - 1;
+        };
+
         $scope.showPage = function (page) {
             if ($scope.currentPage() !== page) {
-                $scope.paginationList = pagination.getDynamicPaginationList(page);
+                $scope.paginationList = pagination.getPaginationList(page);
                 $scope.messages = pagination.getCurrentPageMessages(page);
             }
         };
@@ -32,18 +36,14 @@ messageApp.controller('messageCtrl', ['$scope', '$http','messageService', 'pagin
 
         $scope.previousPage = function () {
             if ($scope.currentPage() > 0 ) {
-                $scope.paginationList = pagination.getDynamicPaginationList($scope.currentPage());
+                $scope.paginationList = pagination.getPaginationList($scope.currentPage());
                 $scope.messages = pagination.getPreviousPage();
             }
         };
 
-        $scope.totalPagesNum = function () {
-            return pagination.getTotalPagesNum() - 1;
-        };
-
         $scope.nextPage = function () {
             if ($scope.currentPage() < pagination.getTotalPagesNum() - 1) {
-                $scope.paginationList = pagination.getDynamicPaginationList($scope.currentPage());
+                $scope.paginationList = pagination.getPaginationList($scope.currentPage());
                 $scope.messages = pagination.getNextPage();
             }
         };
