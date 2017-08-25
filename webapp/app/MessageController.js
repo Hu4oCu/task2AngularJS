@@ -16,8 +16,18 @@ messageApp.controller('messageCtrl', ['$scope', '$http','messageService', 'pagin
         };
 
         $scope.showPage = function (page) {
-            $scope.paginationList = pagination.getDynamicPaginationList(page);
-            $scope.messages = pagination.getCurrentPageMessages(page);
+            if ($scope.currentPage() !== page) {
+                $scope.paginationList = pagination.getDynamicPaginationList(page);
+                $scope.messages = pagination.getCurrentPageMessages(page);
+            }
+        };
+
+        $scope.goToFirstPage = function () {
+            $scope.showPage(0);
+        };
+
+        $scope.goToLastPage = function () {
+            $scope.showPage(pagination.getTotalPagesNum() - 1);
         };
 
         $scope.previousPage = function () {

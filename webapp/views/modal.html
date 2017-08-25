@@ -5,26 +5,26 @@
                 <div class="modal-header">
                     <h5 class="modal-title">{{modalTitle}}</h5>
                     <button type="button" class="close" aria-label="Close" ng-click="closeModal()">
-                        <span aria-hidden="true">&times;</span>
+                        <i class="fa fa-times" aria-hidden="true"></i>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="pb-2">
                         <div class="ml-2">MessageRU: </div>
                         <div class="ml-2">
-                            <input type="text" size="50" ng-model="inputMessage.ru">
+                            <textarea rows="4" cols="80" ng-model="inputMessage.ru"></textarea>
                         </div>
                     </div>
                     <div class="pb-2">
                         <div class="ml-2">MessageKZ: </div>
                         <div class="ml-2">
-                            <input type="text" size="50" ng-model="inputMessage.kz">
+                            <textarea rows="4" cols="80" ng-model="inputMessage.kz"></textarea>
                         </div>
                     </div>
                     <div>
                         <div class="ml-2">MessageEN: </div>
                         <div class="ml-2">
-                            <input type="text" size="50" ng-model="inputMessage.en">
+                            <textarea rows="4" cols="80" ng-model="inputMessage.en"></textarea>
                         </div>
                     </div>
                 </div>

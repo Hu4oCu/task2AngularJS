@@ -3,7 +3,6 @@ var messageApp = angular.module('messageApp');
 messageApp.factory('pagination', [function () {
     var currentPage = 0,
         itemsPerPage = 10,
-        maxPaginationList = 6,
         messages = [];
 
     return {
@@ -69,21 +68,22 @@ messageApp.factory('pagination', [function () {
 
         getDynamicPaginationList: function (page) {
             var dynamicPaginationList = [],
+                maxPaginationList = 6,
                 paginationList = this.getPaginationList(),
                 curPage = angular.isUndefined(page) ? 0 : page,
                 start = curPage - maxPaginationList,
                 end = curPage + maxPaginationList,
-                totalPagesNum = this.getTotalPagesNum();
+                totalPagesNum = this.getTotalPagesNum() - 1;
 
-            if (curPage <= maxPaginationList) {
+            if (curPage < maxPaginationList) {
                 dynamicPaginationList = paginationList
                     .slice(0, 12);
-            } else if (curPage > totalPagesNum - maxPaginationList) {
-                dynamicPaginationList = paginationList
-                    .slice(start, totalPagesNum);
-            } else {
+            } else if (curPage >= maxPaginationList && curPage < totalPagesNum) {
                 dynamicPaginationList = paginationList
                     .slice(start, end);
+            } else if (curPage > totalPagesNum - 5) {
+                dynamicPaginationList = paginationList
+                    .slice(start);
             }
 
             return dynamicPaginationList;
@@ -102,13 +102,13 @@ messageApp.factory('pagination', [function () {
 
         getNextPage: function () {
             var nextPageNum = currentPage + 1,
-                totalPagesNum = this.getTotalPagesNum();
+                totalPagesNum = this.getTotalPagesNum() - 1;
 
-            if (nextPageNum < totalPagesNum - 1) {
+            if (nextPageNum < totalPagesNum) {
                 currentPage = nextPageNum;
             } else {
-                nextPageNum = totalPagesNum - 1;
-                currentPage = totalPagesNum - 1;
+                nextPageNum = totalPagesNum;
+                currentPage = totalPagesNum;
             }
 
             return this.getCurrentPageMessages(nextPageNum);

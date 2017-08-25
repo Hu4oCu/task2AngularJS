@@ -17,13 +17,31 @@
 				</button>
 			</nav>
 		</div>
-        <nav class="mt-3" ng-show="paginationList">
+        <nav class="mt-3" ng-show="paginationList" onselectstart="return false" onmousedown="return false">
             <ul class="pagination pagination-sm">
-                <li class="page-item" ng-click="previousPage()" ng-class="{'disabled': currentPage() === 0}" style="cursor: pointer"><a class="page-link">Previous</a></li>
+                <li class="page-item" ng-click="goToFirstPage()"
+                    ng-class="{'disabled': currentPage() === 0}" style="cursor: pointer">
+                    <a class="page-link d-inline-block px-3"><i class="fa fa-step-backward" aria-hidden="true"></i></a>
+                </li>
+                <li class="page-item" ng-click="previousPage()"
+					ng-class="{'disabled': currentPage() === 0}" style="cursor: pointer">
+                    <a class="page-link d-inline-block px-3"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a>
+                </li>
+
                 <li class="page-item" ng-repeat="page in paginationList"
                     ng-click="showPage(page.link)"
-                    ng-class="{'active': currentPage() === page.link}" style="cursor: pointer"><a class="page-link">{{page.name}}</a></li>
-                <li class="page-item" ng-click="nextPage()" ng-class="{'disabled': currentPage() === totalPagesNum()}" style="cursor: pointer"><a class="page-link">Next</a></li>
+                    ng-class="{'active': currentPage() === page.link}" style="cursor: pointer">
+                    <a class="page-link d-inline-block text-center" style="width: 40px">{{page.name}}</a>
+                </li>
+
+                <li class="page-item" ng-click="nextPage()"
+                    ng-class="{'disabled': currentPage() === totalPagesNum()}" style="cursor: pointer">
+                    <a class="page-link d-inline-block px-3"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                </li>
+                <li class="page-item" ng-click="goToLastPage()"
+                    ng-class="{'disabled': currentPage() === totalPagesNum()}" style="cursor: pointer">
+                    <a class="page-link d-inline-block px-3"><i class="fa fa-step-forward" aria-hidden="true"></i></a>
+                </li>
             </ul>
         </nav>
 		<table class="table table-hover table-sm" border="1">
@@ -56,7 +74,6 @@
 				</tr>
 			</tbody>
 		</table>
-		<!--<pagination></pagination>-->
 	</div>
 	<script src="app/MessageController.js"></script>
 	<script src="app/MessageService.js"></script>
