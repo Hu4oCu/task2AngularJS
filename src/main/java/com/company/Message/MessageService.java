@@ -84,7 +84,7 @@ public class MessageService {
         sort();
     }
 
-    public long getFreeId() {
+    public synchronized long getFreeId() {
         long id = 0, dif, previousId, nextId;
 
         if (messages.get(0).getId() == 1) {

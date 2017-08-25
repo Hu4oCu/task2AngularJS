@@ -89,7 +89,7 @@ messageApp.controller('messageCtrl', ['$scope', '$http','messageService', 'pagin
 
                     var curPage = $scope.currentPage();
 
-                    if ($scope.paginationList.length < $scope.totalPagesNum()) {
+                    if ($scope.paginationList.length <= $scope.totalPagesNum()) {
                         $scope.paginationList = pagination.getPaginationList(curPage + 1);
                         $scope.messages = pagination.getCurrentPageMessages(curPage + 1);
                     }

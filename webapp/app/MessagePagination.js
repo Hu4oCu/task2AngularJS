@@ -53,7 +53,7 @@ messageApp.factory('pagination', [function () {
         },
 
         getPaginationList: function (page) {
-            var dynamicPaginationList = [],
+            var paginationList = [],
                 maxPaginationList = 8,
                 delta = Math.floor(maxPaginationList / 2),
                 curPage = angular.isUndefined(page) ? 0 : page,
@@ -65,20 +65,24 @@ messageApp.factory('pagination', [function () {
             if (start < 0) {
                 start = 0;
                 end = maxPaginationList;
-            } else if (end > totalPagesNum) {
+            }
+            if (end > totalPagesNum) {
                 end = totalPagesNum;
                 start = end - maxPaginationList;
+                if (start < 0) {
+                    start = 0;
+                }
             }
 
             for (var i = start; i <= end; i++) {
                 var name = i + 1;
-                dynamicPaginationList.push({
+                paginationList.push({
                     name: name,
                     link: i
                 });
             }
 
-            return dynamicPaginationList;
+            return paginationList;
         },
 
         getPreviousPage: function () {
