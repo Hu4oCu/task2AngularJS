@@ -5,16 +5,12 @@
             var service = {};
 
             service.getMessagesFromRest = function () {
-                var messages = [];
-
-                $http.get("/rest/messages")
+                return $http.get("/rest/messages")
                     .then(function (response) {
-                        messages = response.data;
+                        return response.data;
                     }, function error(response) {
-                        console.log("Error: ", response.statusText);
+                        return response;
                     });
-
-                return messages;
             };
 
             service.getMessageById = function (id) {
@@ -39,31 +35,29 @@
                 }).then(function success(response) {
                     return response.data.id;
                 }, function error(response) {
-                    console.log("Error: ", response.statusText);
+                    return response;
                 });
             };
 
             service.updateMessage = function (message) {
-                $http({
+                return $http({
                     method: 'PUT',
                     url: "/rest/messages",
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     data: $httpParamSerializerJQLike(message)
-                }).then(function success() {
-                    console.log("Message updated");
+                }).then(function success(response) {
+                    return response;
                 }, function error(response) {
-                    console.log("Error", response.statusText);
+                    return response;
                 });
             };
 
             service.deleteMessage = function (message) {
-                $http.delete("/rest/messages/" + message.id)
+                return $http.delete("/rest/messages/" + message.id)
                     .then(function success(response) {
-                        if (response.statusText === "OK") {
-                            console.log("Message deleted");
-                        }
+                        return response;
                     }, function error(response) {
-                        console.log("Error: ", response.statusText);
+                        return response;
                     });
             };
 

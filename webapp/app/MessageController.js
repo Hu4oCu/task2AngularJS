@@ -4,9 +4,9 @@ angular.module('messageApp', [])
 
         $scope.paginationList = [{name: 1, link: 0}];
 
-        $scope.messages = $http.get("/rest/messages")
+        $scope.messages = messageService.getMessagesFromRest()
             .then(function (response) {
-                pagination.setMessages(response.data);
+                pagination.setMessages(response);
 
                 $scope.messages = pagination.getCurrentPageMessages();
                 $scope.paginationList = pagination.getPaginationList();
@@ -50,28 +50,34 @@ angular.module('messageApp', [])
         };
 
         $scope.deleteMessage = function(message, $index) {
-            var curPage = $scope.currentPage();
+            messageService.deleteMessage(message).then(function success() {
+                var curPage = $scope.currentPage();
 
-            $scope.messages.splice($index, 1);
-            messageService.deleteMessage(message);
-            pagination.deleteMessage(message);
+                $scope.messages.splice($index, 1);
+                pagination.deleteMessage(message);
 
-            if (curPage > $scope.totalPagesNum()) {
-                $scope.paginationList = pagination.getPaginationList(curPage - 1);
-                $scope.messages = pagination.getCurrentPageMessages(curPage - 1);
-            }
+                if (curPage > $scope.totalPagesNum()) {
+                    $scope.paginationList = pagination.getPaginationList(curPage - 1);
+                    $scope.messages = pagination.getCurrentPageMessages(curPage - 1);
+                }
+            }, function error(response) {
+                console.log("Error: ", response.statusText);
+            });
+
         };
 
         $scope.updateMessage = function (message, index) {
             if (message.ru.length > 0 && message.kz.length > 0 && message.en.length > 0) {
                 $scope.showModal = false;
 
-                $scope.inputMessage = {};
-                $scope.messages[index].ru = message.ru;
-                $scope.messages[index].kz = message.kz;
-                $scope.messages[index].en = message.en;
-
-                messageService.updateMessage(message, index);
+                messageService.updateMessage(message, index).then(function success() {
+                    $scope.inputMessage = {};
+                    $scope.messages[index].ru = message.ru;
+                    $scope.messages[index].kz = message.kz;
+                    $scope.messages[index].en = message.en;
+                }, function error(response) {
+                    console.log("Error: ", response.statusText);
+                });
             } else {
                 window.alert("Empty values not allowed!");
             }
@@ -85,12 +91,11 @@ angular.module('messageApp', [])
                     message.id = response;
                     pagination.addMessage(message);
 
-                    var curPage = $scope.currentPage();
-
                     if ($scope.paginationList.length <= $scope.totalPagesNum()) {
-                        $scope.paginationList = pagination.getPaginationList(curPage + 1);
-                        $scope.messages = pagination.getCurrentPageMessages(curPage + 1);
+                        $scope.paginationList = pagination.getPaginationList($scope.currentPage());
                     }
+                }, function error(response) {
+                    console.log("Error: ", response.statusText)
                 });
 
             } else {
