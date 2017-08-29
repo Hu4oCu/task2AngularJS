@@ -1,6 +1,5 @@
-var messageApp = angular.module('messageApp');
-
-messageApp.directive('modal', function () {
+angular.module('messageApp')
+    .directive('modal', function () {
     return {
         restrict: 'E',
         scope: false,

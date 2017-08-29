@@ -1,8 +1,6 @@
-var messageApp = angular.module('messageApp', []);
-
-messageApp.controller('messageCtrl', ['$scope', '$http','messageService', 'pagination',
+angular.module('messageApp', [])
+    .controller('messageCtrl', ['$scope', '$http','messageService', 'pagination',
     function ($scope, $http, messageService, pagination) {
-
 
         $scope.paginationList = [{name: 1, link: 0}];
 

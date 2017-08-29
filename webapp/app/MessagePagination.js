@@ -1,113 +1,117 @@
-var messageApp = angular.module('messageApp');
+(function() {
+    angular.module('messageApp')
+        .factory('pagination', pagination);
 
-messageApp.factory('pagination', [function () {
-    var currentPage = 0,
-        itemsPerPage = 15,
-        messages = [];
+    function pagination() {
+        var currentPage = 0,
+            itemsPerPage = 15,
+            messages = [];
 
-    return {
-        setMessages: function (newMessages) {
-            messages = newMessages;
-        },
+        return {
+            setMessages: function (newMessages) {
+                messages = newMessages;
+            },
 
-        deleteMessage: function (message) {
-            var index;
+            deleteMessage: function (message) {
+                var index;
 
-            index = messages.indexOf(message);
+                index = messages.indexOf(message);
 
-            if (index > -1) {
-                messages.splice(index, 1);
-            }
-        },
-
-        addMessage: function (message) {
-            messages.push(message);
-            messages.sort(function compare(a, b) {
-                if (a.id < b.id) {
-                    return -1;
-                } else if (a.id > b.id) {
-                    return 1;
-                } else {
-                    return 0;
+                if (index > -1) {
+                    messages.splice(index, 1);
                 }
-            });
-        },
+            },
 
-        getTotalPagesNum: function () {
-            return Math.ceil(messages.length / itemsPerPage);
-        },
+            addMessage: function (message) {
+                messages.push(message);
+                messages.sort(function compare(a, b) {
+                    if (a.id < b.id) {
+                        return -1;
+                    } else if (a.id > b.id) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
+            },
 
-        getCurrentPageNum: function () {
-            return currentPage;
-        },
+            getTotalPagesNum: function () {
+                return Math.ceil(messages.length / itemsPerPage);
+            },
 
-        getCurrentPageMessages: function (num) {
-            var pageNum = angular.isUndefined(num) ? 0 : num,
-                first = itemsPerPage * pageNum,
-                last = first + itemsPerPage;
+            getCurrentPageNum: function () {
+                return currentPage;
+            },
 
-            currentPage = pageNum;
-            last = last > messages.length ? messages.length : last;
+            getCurrentPageMessages: function (num) {
+                var pageNum = angular.isUndefined(num) ? 0 : num,
+                    first = itemsPerPage * pageNum,
+                    last = first + itemsPerPage;
 
-            return messages.slice(first, last);
-        },
+                currentPage = pageNum;
+                last = last > messages.length ? messages.length : last;
 
-        getPaginationList: function (page) {
-            var paginationList = [],
-                maxPaginationList = 8,
-                delta = Math.floor(maxPaginationList / 2),
-                curPage = angular.isUndefined(page) ? 0 : page,
-                start = curPage - delta,
-                end = start + maxPaginationList,
-                totalPagesNum = this.getTotalPagesNum() - 1;
+                return messages.slice(first, last);
+            },
+
+            getPaginationList: function (page) {
+                var paginationList = [],
+                    maxPaginationList = 8,
+                    delta = Math.floor(maxPaginationList / 2),
+                    curPage = angular.isUndefined(page) ? 0 : page,
+                    start = curPage - delta,
+                    end = start + maxPaginationList,
+                    totalPagesNum = this.getTotalPagesNum() - 1;
 
 
-            if (start < 0) {
-                start = 0;
-                end = maxPaginationList;
-            }
-            if (end > totalPagesNum) {
-                end = totalPagesNum;
-                start = end - maxPaginationList;
                 if (start < 0) {
                     start = 0;
+                    end = maxPaginationList;
                 }
+                if (end > totalPagesNum) {
+                    end = totalPagesNum;
+                    start = end - maxPaginationList;
+                    if (start < 0) {
+                        start = 0;
+                    }
+                }
+
+                for (var i = start; i <= end; i++) {
+                    var name = i + 1;
+                    paginationList.push({
+                        name: name,
+                        link: i
+                    });
+                }
+
+                return paginationList;
+            },
+
+            getPreviousPage: function () {
+                var prevPageNum = currentPage - 1;
+
+                if (prevPageNum < 0) {
+                    prevPageNum = 0;
+                    currentPage = prevPageNum;
+                }
+
+                return this.getCurrentPageMessages(prevPageNum);
+            },
+
+            getNextPage: function () {
+                var nextPageNum = currentPage + 1,
+                    totalPagesNum = this.getTotalPagesNum() - 1;
+
+                if (nextPageNum < totalPagesNum) {
+                    currentPage = nextPageNum;
+                } else {
+                    nextPageNum = totalPagesNum;
+                    currentPage = totalPagesNum;
+                }
+
+                return this.getCurrentPageMessages(nextPageNum);
             }
-
-            for (var i = start; i <= end; i++) {
-                var name = i + 1;
-                paginationList.push({
-                    name: name,
-                    link: i
-                });
-            }
-
-            return paginationList;
-        },
-
-        getPreviousPage: function () {
-            var prevPageNum = currentPage - 1;
-
-            if (prevPageNum < 0) {
-                prevPageNum = 0;
-                currentPage = prevPageNum;
-            }
-
-            return this.getCurrentPageMessages(prevPageNum);
-        },
-
-        getNextPage: function () {
-            var nextPageNum = currentPage + 1,
-                totalPagesNum = this.getTotalPagesNum() - 1;
-
-            if (nextPageNum < totalPagesNum) {
-                currentPage = nextPageNum;
-            } else {
-                nextPageNum = totalPagesNum;
-                currentPage = totalPagesNum;
-            }
-
-            return this.getCurrentPageMessages(nextPageNum);
         }
     }
-}]);
+
+})();
